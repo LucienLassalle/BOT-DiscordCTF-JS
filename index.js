@@ -112,35 +112,45 @@ client.on('interactionCreate', async (interaction) => {
 
       let count = 0;
       for (const ctf of ctfs) {
-        if (count >= 15) break; // Limite le nombre de CTF à 25
+        if (count >= 15) break; // Limite le nombre de CTF à 15
         if (onsite === null || onsite === ctf.onsite) {
-          const embed = new MessageEmbed() 
-            .setTitle(ctf.title ? ctf.title : 'Titre non disponible')
-            .setURL(ctf.ctftime_url ? ctf.ctftime_url : 'https://ctftime.org/')
-            .setColor('#0099ff');
+
+          try{
+            const embed = new MessageEmbed() 
+              .setTitle(ctf.title ? ctf.title : 'Titre non disponible')
+              .setURL(ctf.ctftime_url ? ctf.ctftime_url : 'https://ctftime.org/')
+              .setColor('#0099ff');
           
   
-          embed.addFields(
-            {name: 'CTF Start', value: ctf.start.slice(0, 10), inline: true},
-            {name: 'CTF Finish', value: ctf.finish.slice(0, 10), inline: true},
-            {name: 'CTF URL', value: ctf.url, inline: false},
-          );
-          if (description && ctf.description) {
-            embed.setDescription(ctf.description);
-          }
+            embed.addFields(
+              {name: 'CTF Start', value: ctf.start.slice(0, 10), inline: true},
+              {name: 'CTF Finish', value: ctf.finish.slice(0, 10), inline: true},
+              {name: 'CTF URL', value: ctf.url, inline: false},
+            );
+            if (description && ctf.description) {
+              embed.setDescription(ctf.description);
+            }
+          
   
-          try{
-            await interaction.channel.send({ embeds: [embed] });
-            await new Promise(resolve => setTimeout(resolve, 300)); // pause de 0,3 secondes.
-            count++;
-          } catch (error) {
-            console.error('Erreur lors de l\'envoi du message:', error);
+            try{
+              await interaction.channel.send({ embeds: [embed] });
+              await new Promise(resolve => setTimeout(resolve, 300)); // pause de 0,3 secondes.
+              count++;
+            } catch (error) {
+              console.error('Erreur lors de l\'envoi du message:', error);
+            }
+
+          } catch(e) {
+            console.error('Erreur pour un CTF')
           }
+        }
+        if(count == 15){
+          await interaction.channel.send('Limite de 15 CTF atteinte.');
         }
       }
   
       if (ctfs.length === 0) {
-        await interaction.reply('Aucun CTF trouvé pour la période sélectionnée et les critères spécifiés.');
+        await interaction.channel.send('Aucun CTF trouvé pour la période sélectionnée et les critères spécifiés.');
       } 
     } catch (error) {
       console.error('Erreur lors de l\'exécution de la commande ctf:', error);
