@@ -131,7 +131,7 @@ client.on('interactionCreate', async (interaction) => {
   
           try{
             await interaction.channel.send({ embeds: [embed] });
-            await new Promise(resolve => setTimeout(resolve, 200)); // pause de 1 seconde
+            await new Promise(resolve => setTimeout(resolve, 300)); // pause de 0,3 secondes.
             count++;
           } catch (error) {
             console.error('Erreur lors de l\'envoi du message:', error);
